@@ -76,7 +76,26 @@ app.put("/", (req, res) => {
 
 // Delete patient records
 app.delete("/", (req, res) => {
-    res.status(200).send({"msg": "HTTP DELETE - SUCCESS!"})
+
+        // validate patient exists
+    // console.log(records[req.headers.ssn] === undefined)
+    if (records[req.headers.ssn] === undefined) {
+        res.status(404).send({"msg":"Patient not found"})
+        return;
+    }
+
+    // verify ssn matches first and last name
+    if (req.headers.firstname == patients[req.headers.ssn][0] && req.headers.lastname == patients[req.headers.ssn][1]) {
+        // delete patient and medical records from database
+        delete patients[req.headers.ssn];
+        delete records[req.headers.ssn];
+
+        res.status(200).send(patients);
+    }
+    else {
+        res.status(403).send({"msg":"First or last name did not match"})
+        return;
+    }
 });
 
 app.listen(3000);
