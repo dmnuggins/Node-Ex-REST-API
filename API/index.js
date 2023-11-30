@@ -46,7 +46,10 @@ app.get("/records", (req, res) => {
 
 // Create a new patient
 app.post("/", (req, res) => {
-    res.status(201).send({"msg": "HTTP POST - SUCCESS!"})
+    // create patient in database
+    patients[req.headers.ssn] = [req.headers.firstname, req.headers.lastname, req.headers.phone];
+    res.status(201).send(patients)
+    return;
 });
 
 // Update existing patient phone number
